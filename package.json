@@ -1,0 +1,23 @@
+{
+  "name": "slack-reacjilator",
+  "version": "1.0.0",
+  "description": "A translation bot for Slack that translates a message when a user reacted with an emoji",
+  "main": "index.js",
+  "scripts": {
+    "start": "nf start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bot",
+    "slack",
+    "slackbot"
+  ],
+  "author": "Tomomi Imura",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/translate": "^1.0.0",
+    "body-parser": "^1.17.0",
+    "express": "^4.15.0",
+    "request": "^2.80.0"
+  }
+}
