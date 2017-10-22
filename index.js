@@ -119,9 +119,6 @@ The diff bet .history and .replies are that the history only retrieves the paren
 const getMessage = (ch, ts) => new Promise((resolve, reject) => {
   request.post(apiUrl + '/conversations.replies', {form: {token: oauthToken, channel: ch, ts: ts, limit: 1, inclusive: true}}, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log('### Conversation.replies');
-      console.log(JSON.parse(body));
-
       resolve(JSON.parse(body).messages[0]);
     } else {
       reject;
