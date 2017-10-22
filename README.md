@@ -41,3 +41,5 @@ Get your Google Cloud project ID and API key at `https://cloud.google.com/transl
 ...or use this Heroku button to deploy to Heroku server. You just need to fill out the env vars with the info. No need to create an `.env` file.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/slackAPI/reacjilator)
+
+*When you deploy to Heroku, the request URL for the **Event Subscription** section on Slack App config page would be: https://the-name-you-picked.herokuapp.com/events*

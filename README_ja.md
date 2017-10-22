@@ -6,9 +6,9 @@ Reacjilator は Slack 用のボットで、ユーザからのリアクション�
 
 
 
-## Host Your Own & Run the Bot on Your Slack Workspace
+## 自前サーバ上にコードをデプロイして自分の Slack Workspace で bot を動かす
 
-### Slack App セットアップ
+### Slack アプリ設定
 
 1. [api.slack.com/apps?new_app=1](https://api.slack.com/apps?new_app=1): でアプリを作成
 2. Event Subscription をオンにする。必要なイベントは `reaction_added` で Request URL は `https://自前のサーバ.com/events` へポイントする
@@ -41,3 +41,5 @@ Slack の認証キーなどは `https://api.slack.com/apps/[YOUR_APP_ID]/general
 もしくは、下の Heroku ボタンを使って Heroku サーバにデプロイするのならば、`.env` ファイルを使わず、フォームに入力することによってそのままでブロイ可能です。 
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/slackAPI/reacjilator)
+
+*Heroku にデプロイした場合、Slack アプリ設定ページの **Event Subscription** で入力する Request URLは `https://the-name-you-picked.herokuapp.com/events`* のようになります。
