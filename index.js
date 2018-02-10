@@ -73,7 +73,7 @@ app.post('/events', (req, res) => {
         { type: 'message',
         channel: 'C5TS6D8CC',
         ts: '1508284331.000239' },
-        reaction: 'flag-jp',
+        reaction: 'jp',
         item_user: '...',
         event_ts: '1508284554.000254' },
         type: 'event_callback',
@@ -82,29 +82,39 @@ app.post('/events', (req, res) => {
         authed_users: [ '...' ] }
     */
 
+    if(q.event.item.type != 'message') return;
+
     let emoji = q.event.reaction;
+    let country = '';
 
-    if(isFlagEmoji(emoji) && q.event.item.type === 'message') {
-      // Matching ISO 639-1 language code
-      let lang = langcode[emoji];
-      let channel = q.event.item.channel;
-
-      if(!lang) return;
-
-      getMessage(channel, q.event.item.ts)
-      .then((result) => {
-        if(!result.text) return;
-        postTranslatedMessage(result, lang, channel, emoji);
-      })
-      .catch(console.error);
+    // Check emoji if it is a country flag
+    if(emoji.match(/flag-/)) { // when an emoji has flag- prefix
+      country = emoji.match(/(?!flag-\b)\b\w+/)[0];
+    } else { // jp, fr, etc.
+      const flags = Object.keys(langcode); // array
+      if(flags.includes(emoji)) {
+        country = emoji;
+      } else {
+        return;
+      }
     }
-  }
-});
 
-function isFlagEmoji(emoji) {
-  const flags = Object.keys(langcode); // array
-  return flags.includes(emoji);
-}
+    // Finding a lang based on a country is not the best way but oh well
+    // Matching ISO 639-1 language code
+    let lang = langcode[country];
+    let channel = q.event.item.channel;
+
+    if(!lang) return;
+
+    getMessage(channel, q.event.item.ts)
+    .then((result) => {
+      if(!result.text) return;
+      postTranslatedMessage(result, lang, channel, emoji);
+    })
+    .catch(console.error);
+  }
+
+});
 
 /* conversations.replies Output
 The diff bet .history and .replies are that the history only retrieves the parent message. If the message to be translated was in a thread, the history cannot get the message in the thread, instead, it picks up the parent message!
