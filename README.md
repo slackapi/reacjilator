@@ -2,7 +2,7 @@
 
 Reacjilator translates a message when a user reacted with an emoji (*"reacji"*). For example, when a message gets a `:flag-jp:` reacji, this bot translate the original message to Japanese and post it under the message thread.
 
-![Reacjilator demo](reacjilator-demo.gif)
+![Reacjilator demo](tutorial_images/reacjilator-demo.gif)
 
 
 

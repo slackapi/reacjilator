@@ -2,7 +2,7 @@
 
 Reacjilator は Slack 用のボットで、ユーザからのリアクション絵文字（「リアク字」）に反応してそのリアクションのあったメッセージを翻訳します。たとえば英語のメッセージにたいして `:flag-jp:` のリアク字がつけられると即時にそのメッセージの日本語の翻訳がスレッドに表示されます。
 
-![Reacjilator demo](reacjilator-demo.gif)
+![Reacjilator demo](tutorial_images/reacjilator-demo.gif)
 
 
 

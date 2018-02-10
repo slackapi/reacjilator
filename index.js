@@ -83,11 +83,10 @@ app.post('/events', (req, res) => {
     */
 
     let emoji = q.event.reaction;
-    if(emoji.match(/flag-/) && q.event.item.type === 'message') {
-      // Finding a lang based on a country is not the best way but oh well
-      let country = emoji.match(/(?!flag-\b)\b\w+/)[0];
+
+    if(isFlagEmoji(emoji) && q.event.item.type === 'message') {
       // Matching ISO 639-1 language code
-      let lang = langcode[country];
+      let lang = langcode[emoji];
       let channel = q.event.item.channel;
 
       if(!lang) return;
@@ -101,6 +100,11 @@ app.post('/events', (req, res) => {
     }
   }
 });
+
+function isFlagEmoji(emoji) {
+  const flags = Object.keys(langcode); // array
+  return flags.includes(emoji);
+}
 
 /* conversations.replies Output
 The diff bet .history and .replies are that the history only retrieves the parent message. If the message to be translated was in a thread, the history cannot get the message in the thread, instead, it picks up the parent message!
