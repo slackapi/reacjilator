@@ -17,6 +17,7 @@
   "dependencies": {
     "@google-cloud/translate": "^1.0.0",
     "body-parser": "^1.17.0",
+    "dotenv": "^5.0.1",
     "express": "^4.15.0",
     "request": "^2.80.0"
   }

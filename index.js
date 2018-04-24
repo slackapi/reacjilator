@@ -22,46 +22,64 @@
 
 const langcode = require('./langcode');
 const request = require('request');
-const express = require('express');
-const bodyParser = require('body-parser');
 
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-const server = app.listen(process.env.PORT || 5000, () => {
-  console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
-});
+require('dotenv').config();
 
 const oauthToken = process.env.SLACK_AUTH_TOKEN;
 const apiUrl = 'https://slack.com/api';
 
-const translate = require('@google-cloud/translate')({
-  projectId: process.env.GOOGLE_PROJECT_ID,
-  key: process.env.GOOGLE_KEY
-});
+let credentials;
+
+/* Google Cloud Functions */
+if (process.env.X_GOOGLE_FUNCTION_NAME) {
+  console.log('Cloud Functions detected; skipping Express setup.')
+} else {
+  const express = require('express');
+  const bodyParser = require('body-parser');
+
+  const app = express();
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  const server = app.listen(process.env.PORT || 5000, () => {
+    console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
+  });
+
+  credentials = {
+    projectId: process.env.GOOGLE_PROJECT_ID,
+    key: process.env.GOOGLE_KEY
+  };
+
+  app.post('/events', (req, res) => {
+    // console.log(JSON.stringify(req,null,'\t'));
+    return events(req, res);
+  });
+}
+
+// Require Google Cloud Translation API (no credentials required for GCF).
+const translate = require('@google-cloud/translate')(credentials);
 
 /* Events */
 
-app.post('/events', (req, res) => {
+function events (req, res) {
   let q = req.body;
 
   if (q.type === 'url_verification') {
+    console.log('Slack URL verification request.');
     // App setting validation
-    res.send(q.challenge);
+    return res.send(q.challenge);
   } else if (q.token !== process.env.SLACK_VERIFICATION_TOKEN) {
-    // To see if the request is not coming from Slack
-    res.sendStatus(400);
-    return;
-  } else {
-    res.sendStatus(200);
+    // To see if the request is not coming from Slack.
+    console.warn('Invalid verification token.');
+    return res.status(401);
   }
+
+  res.status(200);
 
   // Events
   if (q.event.type === 'reaction_added') {
     // If reacji was triggered && it is a correct emoji, translate the message into a specified language
 
-    //console.log(q);
     /*
     { token: '...',
       team_id: '...',
@@ -82,10 +100,14 @@ app.post('/events', (req, res) => {
         authed_users: [ '...' ] }
     */
 
-    if(q.event.item.type != 'message') return;
+    if(q.event.item.type != 'message') {
+      return noOpResponse(res);
+    }
 
     let emoji = q.event.reaction;
     let country = '';
+
+    console.log('Reaction: ', emoji);
 
     // Check emoji if it is a country flag
     if(emoji.match(/flag-/)) { // when an emoji has flag- prefix
@@ -95,7 +117,7 @@ app.post('/events', (req, res) => {
       if(flags.includes(emoji)) {
         country = emoji;
       } else {
-        return;
+        return noOpResponse(res);
       }
     }
 
@@ -104,17 +126,27 @@ app.post('/events', (req, res) => {
     let lang = langcode[country];
     let channel = q.event.item.channel;
 
-    if(!lang) return;
+    if(!lang) return noOpResponse(res);
 
-    getMessage(channel, q.event.item.ts)
+    console.log('Flag emoji reaction; translating to ', lang);
+
+    return getMessage(channel, q.event.item.ts)
     .then((result) => {
-      if(!result.text) return;
+      if(!result.text) return noOpResponse(res);
       postTranslatedMessage(result, lang, channel, emoji);
+      return res.send('Reacjilator reacjilated!');
     })
-    .catch(console.error);
+    .catch(e => {
+      res.status(500).send('An error has occured.');
+      console.error(e);
+    });
   }
+};
 
-});
+function noOpResponse(response) {
+  response.status(200).send('No flag emoji reaction detected.');
+  return;
+}
 
 /* conversations.replies Output
 The diff bet .history and .replies are that the history only retrieves the parent message. If the message to be translated was in a thread, the history cannot get the message in the thread, instead, it picks up the parent message!
@@ -131,12 +163,23 @@ The diff bet .history and .replies are that the history only retrieves the paren
   reactions: [ [Object], [Object], [Object] ] } ]
 */
 const getMessage = (ch, ts) => new Promise((resolve, reject) => {
-  request.post(apiUrl + '/conversations.replies', {form: {token: oauthToken, channel: ch, ts: ts, limit: 1, inclusive: true}}, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      resolve(JSON.parse(body).messages[0]);
-    } else {
+  let options = {
+    form: {
+      token: oauthToken,
+      channel: ch,
+      ts: ts,
+      limit: 1,
+      inclusive: true
+    }
+  };
+  request.post(apiUrl + '/conversations.replies', {form: {token: oauthToken, channel: ch, ts: ts, limit: 1, inclusive: true}}, (error, response, sbody) => {
+    let body = JSON.parse(sbody);
+    if (error || body.error || response.statusCode != 200) {
+      let e = error || body.error || 'Could not retrieve Slack message.';
+      console.error('Error getting Slack message: ', e);
       reject;
     }
+    resolve(body.messages[0]);
   });
 });
 
@@ -193,3 +236,5 @@ function postMessage(message, translation, channel, emoji) {
     }
   });
 }
+
+exports.events = events;
