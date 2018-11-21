@@ -1,6 +1,6 @@
 # Reacjilator for Slack
 
-*日本語 README は[こちら](/blob/master/README_ja.md) *
+*日本語 README は[こちら](README_ja.md) *
 
 Reacjilator translates a message when a user reacted with an emoji (*"reacji"*). For example, when a message gets a `:flag-jp:` reacji, this bot translate the original message to Japanese and post it under the message thread.
 
