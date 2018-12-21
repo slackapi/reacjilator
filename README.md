@@ -17,21 +17,13 @@ Reacjilator translates a message when a user reacted with an emoji (*"reacji"*).
 1. Create an app at your Slack App Setting page at [api.slack.com/apps?new_app=1](https://api.slack.com/apps?new_app=1):
 2. Enable events, `reaction_added` and point to `https://your-server.com/events`
 3. Enable Bot user
-4. Set Scopes:
-  - `chat:write:bot` (Send messages with chat.postMessage by a bot),
-  - `reactions:read` (Access the workspace’s emoji reaction history)
-  - `channels:read` (Access public channels info)
-  - `channels:history` (Access user's public channels)
-  - Also, `mpim.history` etc. all other `*.history` scopes, if you want the bot to work on private channels and DMs
-
+4. Make sure the `bot` scope has been pre-selected
 
 ### Deploy This Code on Your Own Server
 
 Rename the `.env_test` to `.env` and fill the env vars with your credentials:
 
 ```
-SLACK_CLIENT_ID=
-SLACK_CLIENT_SECRET=
 SLACK_VERIFICATION_TOKEN=
 SLACK_AUTH_TOKEN=
 GOOGLE_PROJECT_ID=
@@ -46,8 +38,6 @@ Get your Google Cloud project ID and API key at [cloud.google.com](https://cloud
 Rename the `.env_test` to `.env` and fill the env vars:
 
 ```
-SLACK_CLIENT_ID=
-SLACK_CLIENT_SECRET=
 SLACK_VERIFICATION_TOKEN=
 SLACK_AUTH_TOKEN=
 ```
