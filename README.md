@@ -14,7 +14,7 @@ Reacjilator translates a message when a user reacted with an emoji (*"reacji"*).
 
 ### Set Up Your Slack App
 
-1. Create an app at your Slack App Setting page at [api.slack.com/apps?new_app=1](https://api.slack.com/apps?new_app=1):
+1. Create an app at your Slack App Setting page at [api.slack.com/apps](https://api.slack.com/apps):
 2. Enable events, `reaction_added` and point to `https://your-server.com/events`
 3. Enable Bot user
 4. Make sure the `bot` scope has been pre-selected
