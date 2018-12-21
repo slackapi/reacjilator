@@ -10,15 +10,10 @@ Reacjilator は Slack 用のボットで、ユーザからのリアクション�
 
 ### Slack アプリ設定
 
-1. [api.slack.com/apps?new_app=1](https://api.slack.com/apps?new_app=1): でアプリを作成
+1. [api.slack.com/apps](https://api.slack.com/apps): でアプリを作成
 2. Event Subscription をオンにする。必要なイベントは `reaction_added` で Request URL は `https://自前のサーバ.com/events` へポイントする
 3. Bot user をオンにする。この際に適当な名前もつける
-4. OAuth & Permission から必要な Scopes を加える:
-  - `chat:write:bot` (chat.postMessage メソッドでボットからメッセージを送るためのパーミッション),
-  - `reactions:read` (絵文字リアクションにアクセス)
-  - `channels:read` (チャンネルの read アクセス)
-  - `channels:history` (チャンネルメッセージへのアクセス)
-  - ほかにも `mpim.history` などの `*.history` スコープをオンにすると、DM などのプライベートメッセージでボットを動かすことができます。
+4. OAuth Scopes に `bot` スコープがすでに追加されていることを確認
 
 
 ### サーバへのデプロイ
@@ -26,8 +21,6 @@ Reacjilator は Slack 用のボットで、ユーザからのリアクション�
 まず `.env_test` ファイルネームを `.env` に書き換え、必要な認証キーなどの情報を入力してください。
 
 ```
-SLACK_CLIENT_ID=
-SLACK_CLIENT_SECRET=
 SLACK_VERIFICATION_TOKEN=
 SLACK_AUTH_TOKEN=
 GOOGLE_PROJECT_ID=
