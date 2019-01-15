@@ -21,7 +21,7 @@ Reacjilator translates a message when a user reacted with an emoji (*"reacji"*).
 
 ### Deploy This Code on Your Own Server
 
-Rename the `.env_test` to `.env` and fill the env vars with your credentials:
+Rename the `.env_test` to `.env` and fill the env vars with your credentials. You also need Google credentials to use the Google translation API:
 
 ```
 SLACK_VERIFICATION_TOKEN=
@@ -35,14 +35,14 @@ Get Your Slack credentials at: `https://api.slack.com/apps/[YOUR_APP_ID]/general
 Get your Google Cloud project ID and API key at [cloud.google.com](https://cloud.google.com/translate/docs/getting-started)
 
 ### Deploy on Google Cloud Functions
-Rename the `.env_test` to `.env` and fill the env vars:
+
+If you're deplaying on Google Cloud Functions, you don't need to add the Google credentials in the `.env` file.
 
 ```
 SLACK_VERIFICATION_TOKEN=
 SLACK_AUTH_TOKEN=
 ```
-
-Get Your Slack credentials at: `https://api.slack.com/apps/[YOUR_APP_ID]/general` at **Basic Information**, auth token at **OAuth & Permissions**.
+Use `gcloud` CLI to deploy:
 
 `$ gcloud beta functions deploy events --trigger-http`
 
