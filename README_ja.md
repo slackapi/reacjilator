@@ -6,30 +6,42 @@ Reacjilator は Slack 用のボットで、ユーザからのリアクション�
 
 
 
-## 自前サーバ上にコードをデプロイして自分の Slack Workspace で bot を動かす
+## 自分の Slack Workspace でこのアプリを動かすには
 
 ### Slack アプリ設定
 
 1. [api.slack.com/apps](https://api.slack.com/apps): でアプリを作成
-2. Event Subscription をオンにする。必要なイベントは `reaction_added` で Request URL は `https://自前のサーバ.com/events` へポイントする
-3. Bot user をオンにする。この際に適当な名前もつける
-4. OAuth Scopes に `bot` スコープがすでに追加されていることを確認
+2. Event Subscription をオンにする。必要な Bot イベントは `reaction_added` で Request URL は `https://自前のサーバ.com/events` へポイントする。(Glitch server: `http://your-glitch-project.glitch.me/events`)
+3. 下記のスコープをオンに追加する。
+ - "chat:write:bot" (Send messages with chat.postMessage by a bot),
+ - "reactions:read" (Access the workspace’s emoji reaction history)
+ - "channels:read" (Access public channels info)
+ - "*:history" (Access user's  channels)
+4. アプリをインストールし、user token `xoxp-` を取得
 
-
-### サーバへのデプロイ
+### 認証キー
 
 まず `.env_test` ファイルネームを `.env` に書き換え、必要な認証キーなどの情報を入力してください。
 
 ```
-SLACK_VERIFICATION_TOKEN=
-SLACK_AUTH_TOKEN=
+SLACK_SIGNING_SECRET=
+SLACK_ACCESS_TOKEN=
 GOOGLE_PROJECT_ID=
 GOOGLE_KEY=
 ```
 
-Slack の認証キーなどは `https://api.slack.com/apps/[YOUR_APP_ID]/general` の **Basic Information** から、 auth token は **OAuth & Permissions** から。
+Slack の認証キーなどは設定画面の **Basic Information** から、 auth token は **OAuth & Permissions** から。
 
 翻訳の API で使う、Google Cloud project ID と API も自前で準備してください。 [cloud.google.com/translate/docs/getting-started](https://cloud.google.com/translate/docs/getting-started)
+
+
+## Deployment Examples
+
+### Deploy on Google Cloud Functions
+
+このプロジェクトの `google-cloud-functions` ブランチを参照してください。
+
+### Deploy on Heroku
 
 もしくは、下の Heroku ボタンを使って Heroku サーバにデプロイするのならば、`.env` ファイルを使わず、フォームに入力することによってそのままでブロイ可能です。 
 

@@ -10,16 +10,18 @@ Reacjilator translates a message when a user reacted with an emoji (*"reacji"*).
 
 
 
-## Host Your Own & Run the Bot on Your Slack Workspace
-
-### Set Up Your Slack App
+## Set Up Your Slack App
 
 1. Create an app at your Slack App Setting page at [api.slack.com/apps](https://api.slack.com/apps):
-2. Enable events, `reaction_added` and point to `https://your-server.com/events`
-3. Enable Bot user
-4. Make sure the `bot` scope has been pre-selected
+2. Enable the workspace events, `reaction_added` and point to `https://your-server.com/events` 
+3. Set the following scopes:
+ - "chat:write:bot" (Send messages with chat.postMessage by a bot),
+ - "reactions:read" (Access the workspace’s emoji reaction history)
+ - "channels:read" (Access public channels info)
+ - "*:history" (Access user's  channels)
+4. Install the app and get a user token, begins with `xoxp-`
 
-### Deploy This Code on Your Own Server
+### Credentials
 
 Rename the `.env_test` to `.env` and fill the env vars with your credentials. You also need Google credentials to use the Google translation API:
 
@@ -30,21 +32,16 @@ GOOGLE_PROJECT_ID=
 GOOGLE_KEY=
 ```
 
-Get Your Slack credentials at: `https://api.slack.com/apps/[YOUR_APP_ID]/general` at **Basic Information**, auth token at **OAuth & Permissions**.
+Get Your Slack credentials at **Basic Information**, auth token at **OAuth & Permissions**.
 
 Get your Google Cloud project ID and API key at [cloud.google.com](https://cloud.google.com/translate/docs/getting-started)
 
+
+## Deployment Examples
+
 ### Deploy on Google Cloud Functions
 
-If you're deplaying on Google Cloud Functions, you don't need to add the Google credentials in the `.env` file.
-
-```
-SLACK_VERIFICATION_TOKEN=
-SLACK_AUTH_TOKEN=
-```
-Use `gcloud` CLI to deploy:
-
-`$ gcloud beta functions deploy events --trigger-http`
+Please refer the `google-cloud-functions` branch.
 
 ### Deploy on Heroku
 
