@@ -5,20 +5,12 @@
   "repository": "https://github.com/slackAPI/reacjilator",
   "keywords": ["slack", "slack API", "bot", "google translate"],
   "env": {
-    "SLACK_CLIENT_ID": {
-      "description": "Slack Client ID",
-      "value": "1234567890.1234567890"
-    },
-    "SLACK_CLIENT_SECRET": {
-      "description": "Slack Client Secret",
-      "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    },
-    "SLACK_VERIFICATION_TOKEN": {
-      "description": "Slack Verification token",
+    "SLACK_SIGNING_SECRET": {
+      "description": "Slack Signing Secret",
       "value": "xxxxxxxxxxxxxxxxxxxxxxxxx"
     },
-    "SLACK_AUTH_TOKEN": {
-      "description": "Slack Auth token for your Slack workspace",
+    "SLACK_ACCESS_TOKEN": {
+      "description": "Slack OAuth access token for your Slack workspace",
       "value": "xoxp-..."
     },
     "GOOGLE_PROJECT_ID": {
