@@ -26,7 +26,7 @@ Reacjilator translates a message when a user reacted with an emoji (*"reacji"*).
 Rename the `.env_test` to `.env` and fill the env vars with your credentials. You also need Google credentials to use the Google translation API:
 
 ```
-SLACK_VERIFICATION_TOKEN=
+SLACK_SIGNING_SECRET=
 SLACK_AUTH_TOKEN=
 GOOGLE_PROJECT_ID=
 GOOGLE_KEY=
