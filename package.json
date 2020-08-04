@@ -4,8 +4,9 @@
   "description": "A translation bot for Slack that translates a message when a user reacted with an emoji",
   "main": "index.js",
   "scripts": {
-    "start": "nf start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "functions-framework --target=events",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gcloud functions deploy events --runtime nodejs10 --trigger-http --region asia-northeast1 --allow-unauthenticated --clear-env-vars"
   },
   "keywords": [
     "bot",
@@ -15,7 +16,8 @@
   "author": "Tomomi Imura",
   "license": "MIT",
   "dependencies": {
-    "@google-cloud/translate": "^1.0.0",
+    "@google-cloud/functions-framework": "^1.6.0",
+    "@google-cloud/translate": "^6.0.1",
     "body-parser": "^1.17.0",
     "dotenv": "^5.0.1",
     "express": "^4.15.0",

@@ -44,7 +44,7 @@ SLACK_AUTH_TOKEN=
 ```
 Use `gcloud` CLI to deploy:
 
-`$ gcloud beta functions deploy events --trigger-http`
+`$ npm run deploy`
 
 ### Deploy on Heroku
 
