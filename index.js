@@ -26,42 +26,22 @@ const request = require('request');
 require('dotenv').config();
 
 const oauthToken = process.env.SLACK_AUTH_TOKEN;
+const google_api_key = process.env.GOOGLE_KEY;
+const project_id = process.env.PROJECT_ID;
 const apiUrl = 'https://slack.com/api';
 
-let credentials;
-
-/* Google Cloud Functions */
-if (process.env.X_GOOGLE_FUNCTION_NAME) {
-  console.log('Cloud Functions detected; skipping Express setup.')
-} else {
-  const express = require('express');
-  const bodyParser = require('body-parser');
-
-  const app = express();
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
-
-  const server = app.listen(process.env.PORT || 5000, () => {
-    console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
-  });
-
-  credentials = {
-    projectId: process.env.GOOGLE_PROJECT_ID,
-    key: process.env.GOOGLE_KEY
-  };
-
-  app.post('/events', (req, res) => {
-    // console.log(JSON.stringify(req,null,'\t'));
-    return events(req, res);
-  });
-}
-
+let credentials = {
+  projectId: project_id,
+  key: google_api_key
+};
 // Require Google Cloud Translation API (no credentials required for GCF).
-const translate = require('@google-cloud/translate')(credentials);
+const {Translate} = require('@google-cloud/translate').v2;
+const translate = new Translate(credentials);
+
 
 /* Events */
 
-function events (req, res) {
+exports.events = async (req, res) => {
   let q = req.body;
 
   if (q.type === 'url_verification') {
@@ -162,16 +142,8 @@ The diff bet .history and .replies are that the history only retrieves the paren
   ts: '1508539599.000251',
   reactions: [ [Object], [Object], [Object] ] } ]
 */
+
 const getMessage = (ch, ts) => new Promise((resolve, reject) => {
-  let options = {
-    form: {
-      token: oauthToken,
-      channel: ch,
-      ts: ts,
-      limit: 1,
-      inclusive: true
-    }
-  };
   request.post(apiUrl + '/conversations.replies', {form: {token: oauthToken, channel: ch, ts: ts, limit: 1, inclusive: true}}, (error, response, sbody) => {
     let body = JSON.parse(sbody);
     if (error || body.error || response.statusCode != 200) {
@@ -185,12 +157,10 @@ const getMessage = (ch, ts) => new Promise((resolve, reject) => {
 
 function postTranslatedMessage(message, lang, channel, emoji) {
   // Google Translate
-  translate.translate(message.text, lang, (err, translation) => {
-    if (err) {
-      console.log(err);
-    } else {
-      postMessage(message, translation, channel, emoji);
-    }
+  translate.translate(message.text, lang).then(([translation]) => {
+    postMessage(message, translation, channel, emoji);
+  }).catch(e => {
+    console.error(e);
   });
 }
 
@@ -224,7 +194,6 @@ function postMessage(message, translation, channel, emoji) {
       token: oauthToken,
       channel: channel,
       attachments: JSON.stringify(attachments),
-      as_user: false,
       username: 'Reacjilator Bot',
       thread_ts: ts
     }
@@ -236,5 +205,3 @@ function postMessage(message, translation, channel, emoji) {
     }
   });
 }
-
-exports.events = events;
