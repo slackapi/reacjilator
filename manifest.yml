@@ -1,0 +1,28 @@
+_metadata:
+  major_version: 1
+  minor_version: 1
+display_information:
+  name: Reacjilator
+features:
+  bot_user:
+    display_name: Reacjilator
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - chat:write
+      - reactions:read
+      - channels:read
+      - channels:history
+      - groups:history
+      - im:history
+      - mpim:history
+settings:
+  event_subscriptions:
+    bot_events:
+      - reaction_added
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false
