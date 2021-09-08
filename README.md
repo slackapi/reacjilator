@@ -1,52 +1,29 @@
 # Reacjilator for Slack
 
-> :jp: README in Japanese is available: 日本語 README は[こちら](README_ja.md) 
-
-
-
-Reacjilator translates a message when a user reacted with an emoji (*"reacji"*). For example, when a message gets a `:flag-jp:` reacji, this bot translate the original message to Japanese and post it under the message thread.
+Reacjilator translates a message when a user reacts with an emoji (*"reacji"*). For example, when a message gets a `:flag-de:` reacji, this bot translates the original message to German and posts it in the message thread.
 
 ![Reacjilator demo](tutorial_images/reacjilator-demo.gif)
 
-
-
 ## Set Up Your Slack App
 
-1. Create an app at your Slack App Setting page at [api.slack.com/apps](https://api.slack.com/apps):
-2. Enable the workspace events, `reaction_added` and point to `https://your-server.com/events` 
-3. Set the following scopes:
- - "chat:write:bot" (Send messages with chat.postMessage by a bot),
- - "reactions:read" (Access the workspace’s emoji reaction history)
- - "channels:read" (Access public channels info)
- - "*:history" (Access user's  channels)
-4. Install the app and get a user token, begins with `xoxp-`
+1. Create an app at your Slack App Settings page at [api.slack.com/apps](https://api.slack.com/apps)
+2. Choose "From an app manifest", select the workspace you want to use, then paste the contents of [`manifest.yml`](./manifest.yml) into the dialog marked "Enter app manifest below".
+3. On the **OAuth & Permissions** page, install the app and get a **Bot User OAuth Token** - it begins with `xoxb-`.
+4. On the **Basic Information** page, scroll down to **App-Level Tokens** and click **Generate Token and Scopes**.
+5. Add the `connections:write` scope, give your token a name, and click **Generate**. Copy this new token to your `.env` file as `SLACK_APP_TOKEN`
 
 ### Credentials
 
-Rename the `.env_test` to `.env` and fill the env vars with your credentials. You also need Google credentials to use the Google translation API:
+Rename the `.env.sample` to `.env` and fill the env vars with your credentials. You also need Google credentials to use the Google translation API:
 
 ```
 SLACK_SIGNING_SECRET=
 SLACK_AUTH_TOKEN=
 GOOGLE_PROJECT_ID=
-GOOGLE_KEY=
+GOOGLE_APPLICATION_CREDENTIALS=
 ```
 
-Get Your Slack credentials at **Basic Information**, auth token at **OAuth & Permissions**.
+Get Your Slack App-Level Token at **Basic Information**, And your bot token at **OAuth & Permissions**.
 
-Get your Google Cloud project ID and API key at [cloud.google.com](https://cloud.google.com/translate/docs/getting-started)
+Get your Google Cloud project ID and application credentials at [cloud.google.com](https://cloud.google.com/translate/docs/getting-started)
 
-
-## Deployment Examples
-
-### Deploy on Google Cloud Functions
-
-Please refer the `google-cloud-functions` branch.
-
-### Deploy on Heroku
-
-Use this Heroku button to deploy to Heroku server. You just need to fill out the env vars with the info. No need to create an `.env` file.
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/slackAPI/reacjilator)
-
-*When you deploy to Heroku, the request URL for the **Event Subscription** section on Slack App config page would be: `https://the-name-you-picked.herokuapp.com/events`*
