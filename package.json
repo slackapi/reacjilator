@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "A translation bot for Slack that translates a message when a user reacted with an emoji",
   "main": "index.js",
+  "repository": "github:slackapi/reacjilator",
   "scripts": {
     "start": "nf start",
     "test": "echo \"Error: no test specified\" && exit 1"
